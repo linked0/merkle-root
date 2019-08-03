@@ -63,7 +63,7 @@ class MerkleTree(object):
             self.printTree(next_print_nodes, level+1)
 
     def convert_ascii_str(self, hash):
-       return str(binascii.hexlify(hash), 'ascii').upper()
+       return str(binascii.hexlify(hash), encoding='ascii').upper()
 
 def merkle(argv):
     mt = MerkleTree(argv)
