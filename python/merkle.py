@@ -9,7 +9,7 @@ class MerkleTree(object):
         
         if len(self.leaf_data) > 0:
             leaf_count = 1
-            while leaf_count < len(self.leaf_data):
+            while leaf_count <= len(self.leaf_data):
                 leaf_count *= 2
 
             for i in range(len(values), leaf_count):
@@ -20,7 +20,7 @@ class MerkleTree(object):
         for data in self.leaf_data:
             hash_value = self.get_double_sha256(data.encode('ascii'), None)
             node = dict({'hash': hash_value, 'data': data, 'child': None})
-            # print(str(hash_value).upper())
+            # print(self.convert_ascii_sstr(node['hash']))
             current_level.append(node)
 
         non_leaf_node = None
@@ -76,6 +76,11 @@ def merkle(argv):
 
 
 if __name__ == "__main__":
-    # print(sys.argv[1:])
+    # Error check
+    if (len(sys.argv) < 2):
+        print("Error: Missing data parameters")
+        exit(1)
+
+    # Start making merkle tree
     merkle(sys.argv[1:])
 
