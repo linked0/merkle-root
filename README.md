@@ -40,5 +40,30 @@ F51DF418D9D7BAFDCFDC4320409E08E39858D0D686FEE959EA545E6D7C214F71
 144BEE93D8F6350C6E38C96EEB11DE2CD249A7BD5D23FF4C91EB46573B5AF3BA
 ```
 
-## Data structure and implementation in Python
+## Jupyter notebook in Google Colab. environment(Optional)
+Using the Jupyter notebooks is the easiest way to run the python code.
+If you have a google account, you can run my Python implementation in the Google Colab. environment. Please follow steps as follows.
+
+1. Click on the link:
+[Jay's implementation of Merkle tree in Google Colab.](https://colab.research.google.com/github/linked0/merkle-root/blob/master/python/merkle_tree.ipynb)
+2. Press Ctrl+Enter to run cells. (If you have any pop-up, just close it please.) 
+
+## Implemtation details
+### MerkleTree class
+#### Member variables
+
+| Name | Description|
+| :--- | :--- |
+| leaf_data | It is a list which contains the original input data such as "The quick brown fox" and "jump over". |
+| root_node | It is the top node of a Merkle tree that contains child nodes. Each node is implemented with the Map structure. (Dictionary type in Python) |
+
+#### Member functions
+| Name | Description|
+| :--- | :--- |
+| make_tree | It makes a balanced hash tree containing sub trees with hash |
+| get_double_sha256 | It has the input parameter double-sha256 hashed |
+| print_tree | It prints the hash value from top to leaf nodes |
+| convert_binary_to_ascii | It converts a binary string to ascii string.|
+
+### Example of data structure in Python
 ![alt text][treeImage]
