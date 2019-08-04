@@ -21,7 +21,7 @@ Open Terminal and get the source files
 git clone https://github.com/linked0/merkle-tree.git
 ```
 ### Running the script
-Go to perkle-tree/python directory and run Python script.
+Go to merkle-tree/python directory and run Python script.
 ```
 cd merkle-tree/python
 python merkle.py "The quick brown fox" "jump over" "the" "lazy dog"
