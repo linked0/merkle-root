@@ -1,29 +1,31 @@
+import sys, struct
 from hashlib import sha256
-import sys
-import binascii
-
+# import binascii
 
 class MerkleTree(object):
     def __init__(self, values):
         self.leaf_data = values
         
-        if len(self.leaf_data) > 0:
+        leaf_count = 0
+        if len(self.leaf_data) > 1:
             leaf_count = 1
-            while leaf_count <= len(self.leaf_data):
+            while leaf_count < len(self.leaf_data):
                 leaf_count *= 2
-
-            for i in range(len(values), leaf_count):
-                self.leaf_data.append(self.leaf_data[-1])
+        elif len(self.leaf_data) == 1:
+            leaf_count = 1
+        
+        for i in range(len(values), leaf_count):
+            self.leaf_data.append(self.leaf_data[-1])
 
     def makeTree(self):
         current_level = []
+        current_node = None
         for data in self.leaf_data:
             hash_value = self.get_double_sha256(data.encode('ascii'), None)
-            node = dict({'hash': hash_value, 'data': data, 'child': None})
-            # print(self.convert_ascii_sstr(node['hash']))
-            current_level.append(node)
+            current_node = dict({'hash': hash_value, 'data': data, 'child': None})
+#             print(self.convert_ascii_str(current_node['hash']))
+            current_level.append(current_node)
 
-        non_leaf_node = None
         iter_count = 0
         while len(current_level) != 1:
             parent_level = []
@@ -31,13 +33,13 @@ class MerkleTree(object):
                 node1 = current_level[i]
                 node2 = current_level[i+1]
                 hash_value = self.get_double_sha256(node1['hash'], node2['hash'])
-                non_leaf_node = dict({'hash': hash_value, 'data': None, 'child': [node1, node2]})
-                parent_level.append(non_leaf_node)
+                current_node = dict({'hash': hash_value, 'data': None, 'child': [node1, node2]})
+                parent_level.append(current_node)
 
             iter_count += 1
             current_level = parent_level
 
-        self.root_node = non_leaf_node
+        self.root_node = current_node
 
     def get_double_sha256(self, value1, value2):
         m = sha256()
@@ -61,13 +63,23 @@ class MerkleTree(object):
 
         if len(next_print_nodes) != 0:
             self.printTree(next_print_nodes, level+1)
-
-    def convert_ascii_str(self, hash):
-        if sys.version_info < (3,0,0):
-            hash_str = str(binascii.hexlify(hash))
-            return hash_str.encode(encoding='ascii').upper()
-        else:
-            return str(binascii.hexlify(hash), 'ascii').upper()
+        
+    def convert_ascii_str(self, hash_str):
+        ascii_str = ''
+        chunk_size = 8
+        for i in range(0, len(hash_str), chunk_size):
+            bin_str = hash_str[i:i+chunk_size]
+            res = struct.unpack('<BBBBBBBB', bin_str)
+            hex_str = ''.join('%02X%02X%02X%02X%02X%02X%02X%02X'%(res))
+            ascii_str += hex_str
+        return ascii_str
+    
+#     def convert_ascii_str_with_binascii(self, hash):
+#         if sys.version_info < (3,0,0):
+#             hash_str = str(binascii.hexlify(hash))
+#             return hash_str.encode(encoding='ascii').upper()
+#         else:
+#             return str(binascii.hexlify(hash), 'ascii').upper()
             
 def merkle(argv):
     mt = MerkleTree(argv)
